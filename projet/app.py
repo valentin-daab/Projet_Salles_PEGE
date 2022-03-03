@@ -1,8 +1,8 @@
-from modif_edt.modif import Paths
+from projet.modif_edt import get_paths_function
 
 
 def run():
-    Paths()
+    get_paths_function()
 
 if __name__ == '__main__':
     run()

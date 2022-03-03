@@ -1,5 +1,4 @@
-from project.modif_edt import fonctions
+from modif_edt.fonctions import get_paths
 
-
-class Paths:
+def get_paths_function():
     get_paths()
