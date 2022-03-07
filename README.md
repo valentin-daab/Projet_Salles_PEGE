@@ -1,12 +1,17 @@
 # Projet Salles PEGE
 
 ## Table des matières 
+- [Structure du projet](#structure)
 - [Description](#description)
 - [Pré-requis](#pré-requis)
 - [Installation](#installation)
 - [Technologies](#technologies)
 - [Auteurs](#auteurs)
 
+## Structure
+- Dans [main.py](main.py) vous retrouverez le script principal de notre programme
+- Dans [fonctions.py](sub/fonctions.py) vous retrouverez l'intégralité des fonctions utilisées
+- Le fichier [requirements.txt](requirements.txt) permet d'importer en une fois l'ensemble des packages nécessaires 
 
 ## Description
 
