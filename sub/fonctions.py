@@ -279,8 +279,7 @@ def get_dict():
     start_end = [list(t) for t in zip(occupation_start_in_hours, occupation_end_in_hours)]
     for x,y in zip(rooms, start_end):
         dict_content[x].append(y)
-    dict_content = {key : sorted(dict_content[key]) for key in sorted(dict_content)}        
-    print(dict_content)
+    dict_content = {key : sorted(dict_content[key]) for key in sorted(dict_content)}
 
 ### SALLES OCCUPEES ###
 
@@ -436,6 +435,7 @@ def customize2():
     deselect()
 
 def fin():
+    driver.close()
     print("Merci d'avoir utilisé notre programme, afin de retrouver votre emploi du temps initial, veuillez le personnalier depuis la page qui va s'ouvrir dans quelques instants...")
     for i in range(0,5):
         print(5-i)
