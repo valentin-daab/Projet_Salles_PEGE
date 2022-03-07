@@ -42,7 +42,7 @@ Le projet Salles PEGE est un programme réalisé dans le cadre du cours "Techniq
 ## Auteurs
 
 - Valentin DAAB : [@valentin-daab](https://github.com/valentin-daab)
-- Louis LA NEVE : [@LA NEVE](https://github.com/LANEVE)
+- Louis LA NEVE : [@LANEVE](https://github.com/LANEVE)
 - Alexandre NEUNREUTHER : [@NEUNREUTHER](https://github.com/Neunreuther)
 
 
