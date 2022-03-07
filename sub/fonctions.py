@@ -10,15 +10,16 @@ from selenium.common.exceptions import NoSuchElementException
 from selenium.common.exceptions import ElementNotInteractableException
 # Autres
 from rich import pretty
+from rich.progress import track
 from rich.console import Console
 console = Console()
 import webbrowser
-from colorama import Fore
 from collections import defaultdict
 from datetime import datetime
 import pandas as pd
 import getpass
 import time
+from time import sleep
 import re
 
 # Choisir chemin d'accès
@@ -27,9 +28,9 @@ def get_paths():
     global browser_path
     root = Tk()
     root.update()
-    print('Sélectionnez le fichier chromedriver.exe')
+    console.print('Sélectionnez le fichier chromedriver.exe', style="#3399FF")
     driver_path = askopenfilename(title = 'Sélectionnez le fichier chromedriver.exe')
-    print('Sélectionnez le .exe du navigateur')
+    console.print('Sélectionnez le .exe du navigateur',style="#3399FF")
     root.withdraw()
     browser_path = askopenfilename(title = 'Sélectionnez le .exe du navigateur')
     root.destroy()
@@ -71,9 +72,9 @@ def connect_user():
     connect()
     while check_login():
         driver.find_element(By.ID, 'username').clear()
-        print('Mot de passe ou Identifiant incorrect, veuillez réessayer.')
+        console.print('Mot de passe ou Identifiant incorrect, veuillez réessayer.', style='red')
         connect_user()
-    return print('Connexion Réussie.')
+    return console.print('Connexion Réussie.', style='green')
 
 
 # Deselect
@@ -91,8 +92,7 @@ def deselect_checker():
 def deselect():
     while deselect_checker():
         deselect_clicker()
-    print('Déselection Réussie.')
-
+    
 
 # Personnaliser edt
 def customize():
@@ -119,7 +119,7 @@ def customize():
     # Cliquer sur 'FSEG-Salles de cours'
     driver.find_element(By.XPATH, ("(//i[@role='button'])[12]")).click()
     time.sleep(4.0)
-
+    
 
 # Sélection rdc
 def rdc() :
@@ -190,9 +190,11 @@ def troisieme():
 
 
 # Coche en fonction de l'étage
-def choix_etage() :
+def choix_etage():
     global etage
     etage = input("A quel étage cherchez vous une salle ? \n RDC : 0 \n 2 ème : 2 \n 3 ème : 3 \n")
+
+def select_etage() :
     if etage =='0' :
         rdc()
     if etage =='2' :
@@ -266,10 +268,10 @@ def get_time():
         input('Quand veux-tu utiliser la salle? \n Maintenant (0) \n Plus tard (1) \n'))
     if choice == 0:
         get_now_time()
-        print('Heure actuelle :', now_time)
+        console.print('Heure actuelle :', now_time)
     if choice == 1:
         choose_time()
-        print('Heure choisie :', now_time)
+        console.print('Heure choisie :', now_time)
 
 
 # Dictionnaire
@@ -311,7 +313,7 @@ def free_room():
     for x in gen:
         salle_libre += [x]
     for x in salle_libre :
-        console.print('La salle', salle_libre[h], 'est libre toute la journée', style="bold red")
+        console.print('La salle', salle_libre[h], 'est libre toute la journée', style="green")
         h += 1
 
 def sep_event_type():
@@ -342,13 +344,13 @@ def check_single_event():
     for i in single_event:
         elem = dict_content[str(i)]
         if (elem[0][0] < now_time < elem[0][1]):
-            print(Fore.RED + "La salle", single_event[z],"est occupée jusqu'à :",elem[0][1])
+            console.print("La salle", single_event[z],"est occupée jusqu'à :",elem[0][1], style='red')
             z += 1
         if (now_time < elem[0][0]):
-            print(Fore.GREEN + "La salle", single_event[z],"est libre jusqu'à :", elem[0][0])
+            console.print("La salle", single_event[z],"est libre jusqu'à :", elem[0][0], style='green')
             z += 1
         if (now_time > elem[0][1]):
-            print(Fore.GREEN + "La salle", single_event[z],"est libre pour le reste de la journée")
+            console.print("La salle", single_event[z],"est libre pour le reste de la journée", style='green')
             z += 1
 
 def check_double_event():
@@ -356,18 +358,18 @@ def check_double_event():
     for element in double_event :
         elem_double = dict_content[str(element)]
         if now_time < elem_double[0][0]:
-            print(Fore.GREEN + "La salle", double_event[j], "est libre jusqu'à", elem_double[0][0])
+            console.print("La salle", double_event[j], "est libre jusqu'à", elem_double[0][0], style = 'green')
         if (elem_double[0][0] < now_time < elem_double[0][1]): 
-            print(Fore.RED + "La salle",double_event[j], "est occupée jusqu'à :", elem_double[0][1]) 
+            console.print("La salle",double_event[j], "est occupée jusqu'à :", elem_double[0][1], style='red') 
             j += 1
         if (elem_double[0][1] < now_time < elem_double[1][0]):
-            print(Fore.GREEN + "La salle", double_event[j], "est libre jusqu'à", elem_double[1][0])
+            console.print("La salle", double_event[j], "est libre jusqu'à", elem_double[1][0], style = 'green')
             j += 1
         if (elem_double[1][0] < now_time < elem_double[1][1]): 
-            print(Fore.RED + "La salle", double_event[j], "est occupée jusqu'à :", elem_double[1][1])
+            console.print("La salle", double_event[j], "est occupée jusqu'à :", elem_double[1][1], style='red')
             j += 1
         if elem_double[1][1] < now_time:
-            print(Fore.GREEN + "La salle", double_event[j], "est libre pour le reste de la journée")
+            console.print("La salle", double_event[j], "est libre pour le reste de la journée", style = 'green')
             j += 1
 
 def check_triple_event():
@@ -375,24 +377,24 @@ def check_triple_event():
     for element in triple_event:
         elem_triple = dict_content[str(element)]
         if now_time < elem_triple[0][0]:
-            print(Fore.GREEN + "La salle", double_event[a], "est libre jusqu'à :", elem_triple[0][0])
+            console.print("La salle", double_event[a], "est libre jusqu'à :", elem_triple[0][0], style = 'green')
         if elem_triple[0][0] < now_time < elem_triple[0][1]: 
-            print(Fore.RED + "La salle", triple_event[a], "est occupée jusqu'à :", elem_triple[0][1]) 
+            console.print("La salle", triple_event[a], "est occupée jusqu'à :", elem_triple[0][1], style='red') 
             a += 1
         if elem_triple[0][1] < now_time < elem_triple[1][0]: 
-            print(Fore.GREEN + "La salle", triple_event[a], "est libre jusqu'à :", elem_triple[1][0])
+            console.print("La salle", triple_event[a], "est libre jusqu'à :", elem_triple[1][0], style = 'green')
             a += 1   
         if elem_triple[1][0] < now_time < elem_triple[1][1]: 
-            print(Fore.RED + "La salle", triple_event[a], "est occupée jusqu'à :", elem_triple[1][1])
+            console.print("La salle", triple_event[a], "est occupée jusqu'à :", elem_triple[1][1], style='red')
             a += 1
         if elem_triple[1][1] < now_time < elem_triple[2][0]: 
-            print(Fore.GREEN + "La salle", triple_event[a], "est occupée jusqu'à :", elem_triple[2][0])
+            console.print("La salle", triple_event[a], "est libre jusqu'à :", elem_triple[2][0], style = 'green')
             a += 1    
         if elem_triple[2][0] < now_time < elem_triple[2][1]:
-            print(Fore.RED + "La salle", triple_event[a], "est occupée jusqu'à :", elem_triple[2][1])
+            console.print("La salle", triple_event[a], "est occupée jusqu'à :", elem_triple[2][1], style='red')
             a += 1
         if elem_triple[2][1] < now_time:
-            print(Fore.GREEN + "La salle", triple_event[a], "est libre pour le reste de la journée")
+            console.print("La salle", triple_event[a], "est libre pour le reste de la journée", style = 'green')
             a += 1
 
 def check_quad_event():
@@ -400,31 +402,31 @@ def check_quad_event():
     for element in quad_event:
         elem_quad = dict_content[str(element)]
         if now_time < elem_quad[0][0]:
-            print(Fore.GREEN + "La salle", quad_event[q], "est libre jusqu'à :", elem_quad[0][0])
+            console.print("La salle", quad_event[q], "est libre jusqu'à :", elem_quad[0][0], style = 'green')
             q += 1
         if elem_quad[0][0] < now_time < elem_quad[0][1]:
-            print(Fore.RED + "La salle", quad_event[q], "est occupée jusqu'à :", elem_quad[0][1])
+            console.print("La salle", quad_event[q], "est occupée jusqu'à :", elem_quad[0][1], style='red')
             q += 1
         if elem_quad[0][1] < now_time < elem_quad[1][0]:
-            print(Fore.GREEN + "La salle", quad_event[q], "est libre jusqu'à :", elem_quad[1][0])
+            console.print("La salle", quad_event[q], "est libre jusqu'à :", elem_quad[1][0], style = 'green')
             q += 1
         if elem_quad[1][0] < now_time < elem_quad[1][1]:
-            print(Fore.RED + "La salle", quad_event[q], "est occupée jusqu'à :", elem_quad[1][1])
+            console.print("La salle", quad_event[q], "est occupée jusqu'à :", elem_quad[1][1], style='red')
             q += 1
         if elem_quad[1][1] < now_time < elem_quad[2][0]:
-            print(Fore.GREEN + "La salle", quad_event[q], "est libre jusqu'à :", elem_quad[2][0])
+            console.print("La salle", quad_event[q], "est libre jusqu'à :", elem_quad[2][0], style = 'green')
             q += 1    
         if elem_quad[2][0] < now_time < elem_quad[2][1]:
-            print(Fore.RED + "La salle", quad_event[q], "est occupée jusqu'à :", elem_quad[2][1])
+            console.print("La salle", quad_event[q], "est occupée jusqu'à :", elem_quad[2][1], style='red')
             q += 1
         if elem_quad[2][1] < now_time < elem_quad[3][0]:
-            print(Fore.GREEN + "La salle", quad_event[q], "est libre jusqu'à :", elem_quad[3][0])
+            console.print("La salle", quad_event[q], "est libre jusqu'à :", elem_quad[3][0], style = 'green')
             q += 1    
         if elem_quad[3][0] < now_time < elem_quad[3][1]:
-            print(Fore.RED + "La salle", quad_event[q], "est occupée jusqu'à :", elem_quad[3][1])
+            console.print("La salle", quad_event[q], "est occupée jusqu'à :", elem_quad[3][1], style='red')
             q += 1
         if elem_quad[3][1] < now_time:
-            print(Fore.GREEN + "La salle", quad_event[q], "est libre pour le reste de la journée")
+            console.print("La salle", quad_event[q], "est libre pour le reste de la journée", style = 'green')
             q += 1
 
 def customize2():
@@ -436,11 +438,10 @@ def customize2():
 
 def fin():
     driver.close()
-    print("Merci d'avoir utilisé notre programme, afin de retrouver votre emploi du temps initial, veuillez le personnalier depuis la page qui va s'ouvrir dans quelques instants...")
-    for i in range(0,5):
-        print(5-i)
-        time.sleep(1)
-    print('0')
+    console.print("Merci d'avoir utilisé notre programme, afin de retrouver votre emploi du temps initial, veuillez le personnalier depuis la page qui va s'ouvrir dans quelques instants...", style='purple')
+    for step in track(range(10), description="Chargement ..."):
+        sleep(1)
+        step
     webbrowser.open("https://monemploidutemps.unistra.fr/config")
 
        

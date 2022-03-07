@@ -9,8 +9,10 @@ from selenium.webdriver.common.by import By
 from selenium.common.exceptions import NoSuchElementException
 from selenium.common.exceptions import ElementNotInteractableException
 # Autres
+from rich.progress import track
+from rich.console import Console
 import getpass
-import time
+from time import sleep
 import re
 # Import relatifs
 import sub.fonctions as f
@@ -25,15 +27,26 @@ liste_salles_2 = ['A 210','A 231', 'A 233']
 liste_salles_3 = ['A 310','A 311','A 312','A 313','A 314','A 326','A 327','A 328','A 329','A 330','A 331','A 333','A 336']
 liste_totale = [liste_salles_0, liste_salles_2, liste_salles_3]
 
+console = Console()
+
+
+
 
 def run():
     f.get_paths()
     f.web()
     f.connect_user()
-    time.sleep(5.0)
-    f.customize()
+    sleep(5.0)
+    with console.status("[bold green]Modification de l'emploi du temps en cours", spinner="aesthetic") as status:
+        while f.customize():
+            sleep(1)
+        console.log(f'[bold green] Fin de la modification')
     f.choix_etage()
-    time.sleep(2.0)
+    with console.status("[bold green]Sélection des salles de l'étage en cours", spinner="aesthetic") as status:
+        while f.select_etage():
+            sleep(1)
+        console.log(f'[bold green] Fin de la sélection')
+    sleep(2.0)
     f.get_today_events()
     f.get_sep_events()
     f.get_rooms()
@@ -52,7 +65,10 @@ def run():
     f.check_double_event()
     f.check_triple_event()
     f.check_quad_event()
-    f.customize2()
+    with console.status("[bold green]Désélection des salles", spinner="aesthetic") as status:
+        while f.customize2():
+            sleep(1)
+        console.log(f'[bold green] Fin de la désélection')
     f.fin()
 
 
