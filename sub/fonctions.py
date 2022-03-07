@@ -23,7 +23,7 @@ from rich.console import Console
 
 console = Console()
 
-
+# Sélection des chemin d'accès à chromedriver.exe et navigateur.exe
 def get_paths():
     global driver_path
     global browser_path
@@ -38,7 +38,7 @@ def get_paths():
     root.destroy()
 
 
-# Selenium
+### SELENIUM ###
 def web():
     global driver
     option = webdriver.ChromeOptions()
@@ -50,7 +50,7 @@ def web():
     driver.get('https://monemploidutemps.unistra.fr/consult/calendar')
 
 
-# Connexion
+# Demande l'identifiant et le mot de passe UNISTRA
 def get_user_info():
     global username
     global password
@@ -58,12 +58,14 @@ def get_user_info():
     password = getpass.getpass('Mot de passe UNISTRA?')
 
 
+# Renvoi des informations au navigateur et clique sur login
 def connect():
     driver.find_element(By.ID, 'username').send_keys(username)
     driver.find_element(By.ID, 'password').send_keys(password)
     driver.find_element(By.ID, 'login-btn').click()
 
 
+# Contrôle si encore sur la page de login ou pas
 def check_login():
     try:
         driver.find_element(By.CLASS_NAME, 'login')
@@ -72,6 +74,7 @@ def check_login():
     return True
 
 
+# Si encore sur la page de login > Réessayer, sinon > Connexion réussie
 def connect_user():
     get_user_info()
     connect()
@@ -83,12 +86,13 @@ def connect_user():
     return console.print('Connexion Réussie.', style='green')
 
 
-# Deselect
+# Clique sur les croix pour désélectionner
 def deselect_clicker():
     driver.find_element(By.CLASS_NAME, 'v-list-item__action.my-0.mr-3').click()
     sleep(1.0)
 
 
+# Contrôle s'il reste encore des croix à cliquer
 def deselect_checker():
     try:
         driver.find_element(By.CLASS_NAME, 'v-list-item__action.my-0.mr-3')
@@ -97,12 +101,13 @@ def deselect_checker():
     return True
 
 
+# Tant qu'il reste des croix continue à cliquer dessus
 def deselect():
     while deselect_checker():
         deselect_clicker()
 
 
-# Personnaliser edt
+# Aller dans l'onglet personnaliser
 def customize():
     driver.find_element(
         By.CSS_SELECTOR, '#app-toolbar > div > button.v-app-bar__nav-icon.hidden-md-and-up.v-btn.v-btn--flat.v-btn--icon.v-btn--round.theme--dark.v-size--default > span > i').click()
@@ -132,7 +137,7 @@ def customize():
     sleep(4.0)
 
 
-# Sélection rdc
+# Sélection des salles au Rez-de-Chaussée
 def rdc():
     driver.find_element(
         By.XPATH, ("(//div[@class='v-input--selection-controls__input'])[3]")).click()
@@ -174,7 +179,7 @@ def rdc():
         By.XPATH, ("(//div[@class='v-input--selection-controls__input'])[15]")).click()
 
 
-# Sélection deuxième étage
+# Sélection des salles du deuxième étage
 def deuxieme():
     driver.find_element(
         By.XPATH, ("(//div[@class='v-input--selection-controls__input'])[16]")).click()
@@ -186,7 +191,7 @@ def deuxieme():
         By.XPATH, ("(//div[@class='v-input--selection-controls__input'])[18]")).click()
 
 
-# Séleciton troisième étage
+# Sélection des salles du troisième étage
 def troisieme():
     driver.find_element(
         By.XPATH, ("(//div[@class='v-input--selection-controls__input'])[19]")).click()
@@ -229,13 +234,14 @@ def troisieme():
     sleep(1.5)
 
 
-# Coche en fonction de l'étage
+# Demande le choix de l'étage à l'utilisateur
 def choix_etage():
     global etage
     etage = input(
         "A quel étage cherchez vous une salle ? \n RDC : 0 \n 2 ème : 2 \n 3 ème : 3 \n")
 
 
+# Sélectionne les salles de l'étage sélecitonnées par l'utilisateur
 def select_etage():
     if etage == '0':
         rdc()
@@ -247,12 +253,14 @@ def select_etage():
 
 
 ### SCRAPING ###
+# Récupère les évènements d'aujourd'hui
 def get_today_events():
     global today_events
     today_events = driver.find_element(
         By.CLASS_NAME, 'v-calendar-daily__day.v-present').get_attribute('outerHTML')
 
 
+# Sépare les évènements dans une liste puis str(liste)
 def get_sep_events():
     global sep_events
     sep_events = []
@@ -261,23 +269,27 @@ def get_sep_events():
     sep_events = str(sep_events)
 
 
+# Récupère les salles occupées aujourd'hui
 def get_rooms():
     global rooms
     rooms = re.findall('<br>(?=A )(.*?)\'', sep_events)
 
 
+# Récupère les pixels qui déterminent l'heure de début
 def get_top_pixels():
     global top_pixels
     top_pixels = re.findall('top: (.*?)px;', sep_events)
     top_pixels = [int(p) for p in top_pixels]
 
 
+# Récupère les pixels qui déterminent la durée
 def get_height_pixels():
     global height_pixels
     height_pixels = re.findall('height: (.*?)px;', sep_events)
     height_pixels = [int(p) for p in height_pixels]
 
 
+# Conversion pixels qui déterminent le début en HH:MM
 def get_occupation_start():
     global occupation_start_numbers
     global occupation_start_in_hours
@@ -287,7 +299,7 @@ def get_occupation_start():
     df1 = pd.to_datetime(df1.start, unit='m').dt.strftime('%H:%M')
     occupation_start_in_hours = df1.values.tolist()
 
-
+# Conversion pixels qui déterminent la durée en HH:MM
 def get_occupation_duration():
     global occupation_duration
     global occupation_duration_in_hours
@@ -297,6 +309,7 @@ def get_occupation_duration():
     occupation_duration_in_hours = df.values.tolist()
 
 
+# Déterminent l'heure de fin en HH:MM
 def get_occupation_end():
     global occupation_end_in_hours
     occupation_end_in_minutes = [
@@ -307,17 +320,19 @@ def get_occupation_end():
 
 
 ### HEURES SALLES ###
+# Détermine l'heure actuelle
 def get_now_time():
     global now_time
     now = datetime.now()
     now_time = now.strftime("%H:%M")
-
-
+ 
+# Demande à quelle heure l'utilisateur souhaite entrer dans la salle
 def choose_time():
     global now_time
     now_time = input('Quelle heure ? Répondre sous la forme HH:MM \n')
 
 
+# L'utilisateur peut choisir entre utiliser l'heure actuelle ou une heure qu'il a choisi
 def get_time():
     choice = int(
         input('Quand veux-tu utiliser la salle? \n Maintenant (0) \n Plus tard (1) \n'))
@@ -329,7 +344,7 @@ def get_time():
         console.print('Heure choisie :', now_time)
 
 
-# Dictionnaire
+# Intégration de toutes les informations dans un dictionnaire
 def get_dict():
     global dict_content
     dict_content = defaultdict(list)
@@ -340,9 +355,8 @@ def get_dict():
     dict_content = {key: sorted(dict_content[key])
                     for key in sorted(dict_content)}
 
-### SALLES OCCUPEES ###
 
-
+# Référence des salles existantes pour chaque étage
 def liste_salles():
     global liste_totale
     global liste_salles_0
@@ -356,6 +370,7 @@ def liste_salles():
     liste_totale = [liste_salles_0, liste_salles_2, liste_salles_3]
 
 
+# Convertit l'étage sélectionné par l'utilisateur en position dans la liste_totale
 def etage_liste():
     global etage
     if etage == '3':
@@ -366,6 +381,8 @@ def etage_liste():
         etage = 0
 
 
+### TRAITEMENT DES DONNEES ###
+# Détermine les salles qui ne sont pas du tout utilisées aujourd'hui
 def free_room():
     global gen
     global salle_libre
@@ -380,6 +397,7 @@ def free_room():
         h += 1
 
 
+# Séparation des salles utilisées 1, 2, 3 ou 4 fois dans une même journée
 def sep_event_type():
     global elem
     global elem_double
@@ -404,6 +422,7 @@ def sep_event_type():
             quad_event.append(keys)
 
 
+# Salles utilisées une fois : comparaison de l'heure choisie et des heures de début et de fin des crénaux
 def check_single_event():
     z = 0
     for i in single_event:
@@ -422,6 +441,7 @@ def check_single_event():
             z += 1
 
 
+# Salles utilisées deux fois : comparaison de l'heure choisie et des heures de début et de fin des crénaux
 def check_double_event():
     j = 0
     for element in double_event:
@@ -447,6 +467,7 @@ def check_double_event():
             j += 1
 
 
+# Salles utilisées trois fois : comparaison de l'heure choisie et des heures de début et de fin des crénaux
 def check_triple_event():
     a = 0
     for element in triple_event:
@@ -480,6 +501,7 @@ def check_triple_event():
             a += 1
 
 
+# Salles utilisées quatre fois : comparaison de l'heure choisie et des heures de début et de fin des crénaux
 def check_quad_event():
     q = 0
     for element in quad_event:
@@ -522,6 +544,7 @@ def check_quad_event():
             q += 1
 
 
+# Retourne dans l'onglet personnaliser et déselectionne toutes les sélections
 def customize2():
     driver.find_element(
         By.CSS_SELECTOR, '#app-toolbar > div > button.v-app-bar__nav-icon.hidden-md-and-up.v-btn.v-btn--flat.v-btn--icon.v-btn--round.theme--dark.v-size--default > span > i').click()
@@ -533,6 +556,7 @@ def customize2():
     deselect()
 
 
+# Ouvre la page de personnalisation et l'utilisateur peut alors choisir son emploi du temps habituel
 def fin():
     driver.close()
     console.print("Merci d'avoir utilisé notre programme, afin de retrouver votre emploi du temps initial, veuillez le personnalier depuis la page qui va s'ouvrir dans quelques instants...", style='purple')

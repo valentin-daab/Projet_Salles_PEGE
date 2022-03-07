@@ -18,6 +18,7 @@ import re
 import sub.fonctions as f
 
 
+# Création de la liste de référence
 global liste_totale
 global liste_salles_0
 global liste_salles_2
@@ -30,9 +31,11 @@ liste_salles_3 = ['A 310', 'A 311', 'A 312', 'A 313', 'A 314', 'A 326',
 liste_totale = [liste_salles_0, liste_salles_2, liste_salles_3]
 
 
+# Création de la console Rich pour afficher couleurs et barres de chargement
 console = Console()
 
 
+# Fonction principale
 def run():
     f.get_paths()
     f.web()
