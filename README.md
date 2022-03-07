@@ -29,7 +29,7 @@ Le projet Salles PEGE est un programme réalisé dans le cadre du cours "Techniq
 - Ouvrir le Windows Terminal : touches ```Windows + R``` puis écrire ```wt```
 - Sélectionner le fichier d'installation (_exemple : téléchargement sur le bureau_ : taper ```cd desktop``` puis ```cd Projet_Salles_PEGE```)
 - Télécharger les packages : taper ```pip install -r requirements.txt```
-- Lancer le programme : ```python main.py``` 
+- Lancer le programme : taper ```python main.py``` 
 - Suivre les instructions sur le Windows Terminal
 
 ## Technologies
@@ -41,9 +41,9 @@ Le projet Salles PEGE est un programme réalisé dans le cadre du cours "Techniq
 
 ## Auteurs
 
-- Valentin DAAB : (@valentin-daab)[https://github.com/valentin-daab]
-- Louis LA NEVE : (@LA NEVE)[https://github.com/LANEVE]
-- Alexandre NEUNREUTHER : (@NEUNREUTHER)[https://github.com/Neunreuther]
+- Valentin DAAB : [@valentin-daab](https://github.com/valentin-daab)
+- Louis LA NEVE : [@LA NEVE](https://github.com/LANEVE)
+- Alexandre NEUNREUTHER : [@NEUNREUTHER](https://github.com/Neunreuther)
 
 
 
