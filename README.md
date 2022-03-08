@@ -1,21 +1,29 @@
 # Projet Salles PEGE
 
 ## Table des matières 
-- [Structure du projet](#structure)
+
 - [Description](#description)
+- [Démo](#démo)
+- [Structure du projet](#structure)
 - [Pré-requis](#pré-requis)
 - [Installation](#installation)
 - [Technologies](#technologies)
 - [Auteurs](#auteurs)
 
-## Structure
-- Dans [main.py](main.py) vous retrouverez le script principal de notre programme
-- Dans [fonctions.py](sub/fonctions.py) vous retrouverez l'intégralité des fonctions utilisées
-- Le fichier [requirements.txt](requirements.txt) permet d'importer en une fois l'ensemble des packages nécessaires 
+
 
 ## Description
 
 Le projet Salles PEGE est un programme réalisé dans le cadre du cours "Techniques de Programmation" du Master APE. Le but de ce programme est de permettre aux étudiants de trouver des salles libres dans le bâtiment du PEGE pour pouvoir y étudier en groupe si les salles de travail de la bibliothèques sont toutes prises.
+
+## Démo
+
+![](gif.gif)
+
+## Structure
+- Dans [main.py](main.py) vous retrouverez le script principal de notre programme
+- Dans [fonctions.py](sub/fonctions.py) vous retrouverez l'intégralité des fonctions utilisées
+- Le fichier [requirements.txt](requirements.txt) permet d'importer en une fois l'ensemble des packages nécessaires 
 
 ## Pré-requis
 
@@ -26,7 +34,6 @@ Le projet Salles PEGE est un programme réalisé dans le cadre du cours "Techniq
 5. Installer [Chromedriver](https://chromedriver.chromium.org/downloads) (Choisir la version qui correspond à la version de votre navigateur)
 6. Connaître l'emplacement de ```chromedriver.exe``` et du [.exe](https://www.howtogeek.com/688781/how-to-quickly-locate-a-programs-exe-file-on-windows-10/) de votre navigateur
 8. Posséder un compte étudiant/professeur à l'Université de Strasbourg
-
 
 ## Installation
 
