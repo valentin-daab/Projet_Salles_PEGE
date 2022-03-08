@@ -40,7 +40,7 @@ def run():
     f.get_paths()
     f.web()
     f.connect_user()
-    sleep(5.0)
+    sleep(10.0)
     with console.status("[bold green]Modification de l'emploi du temps en cours", spinner="aesthetic") as status:
         while f.customize():
             sleep(1)
