@@ -31,7 +31,7 @@ def get_paths():
     root.update()
     console.print('Sélectionnez le fichier chromedriver.exe', style="#3399FF")
     driver_path = askopenfilename(
-        title='Sélectionnez le fichier chromedriver.exe')
+    title='Sélectionnez le fichier chromedriver.exe')
     console.print('Sélectionnez le .exe du navigateur', style="#3399FF")
     root.withdraw()
     browser_path = askopenfilename(title='Sélectionnez le .exe du navigateur')
@@ -44,6 +44,7 @@ def web():
     option = webdriver.ChromeOptions()
     option.add_experimental_option("detach", True)
     option.add_experimental_option('excludeSwitches', ['enable-logging'])
+    option.add_argument('headless')
     option.binary_location = browser_path
     s = Service(driver_path)
     driver = webdriver.Chrome(service=s, options=option)
