@@ -1,5 +1,10 @@
 # Projet Salles PEGE
 
+![](https://img.shields.io/badge/Python-31A8FF.svg?logo=python&logoColor=white)
+![](https://img.shields.io/badge/Selenium-43B02A.svg?logo=selenium&logoColor=white)
+![](https://img.shields.io/badge/Pandas-150458.svg?logo=pandas&logoColor=white)
+![](https://img.shields.io/badge/Terminal-4D4D4D.svg?logo=WindowsTerminal&logoColor=white)
+
 ## Table des matières 
 
 - [Description](#description)
@@ -43,13 +48,6 @@ Le projet Salles PEGE est un programme réalisé dans le cadre du cours "Techniq
 - Télécharger les packages : taper ```pip install -r requirements.txt```
 - Lancer le programme : taper ```python main.py``` 
 - Suivre les instructions sur le Windows Terminal
-
-## Technologies
-
-- [Selenium](https://www.selenium.dev/documentation/)
-- [Rich](https://github.com/Textualize/rich)
-- [Tkinter](https://docs.python.org/fr/3/library/tkinter.html)
-- [Requests](https://docs.python-requests.org/en/latest/)
 
 ## Auteurs
 
